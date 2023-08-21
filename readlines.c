@@ -162,47 +162,56 @@ int walk(char* folderPath){
 //format:
 //[readlines], [this/PATH], [extension]
 int main(int argc, char *argv[]){
-    char* folderPath;
-    char* extensions;
-    allowedExtensions = createList();
-    //get command line arguments
-    if(argc == 2 || argc > 3){
-        //invalid number of arguments
-        printf("Unknown command.\n");
-        return 0;
-    }
-    if(argc == 1){
-        //no argument. 
-        folderPath = input("Enter the target folder path.\n");
-        extensions = input("Enter the file extensions you'd like to read, seperated by dashes (-) there are multiple.\n");
-    }
-    if(argc == 3){
-        //arguments present
-        folderPath = argv[1];
-        extensions = argv[2];
+    while(1){
+        numberOfLines = 0;
+        numberOfFiles = 0;
+        numberOfEmptyLines = 0;
+        char* folderPath;
+        char* extensions;
+        allowedExtensions = createList();
+        //get command line arguments
+        if(argc == 2 || argc > 3){
+            //invalid number of arguments
+            printf("Unknown command.\n");
+            return 0;
+        }
+        if(argc == 1){
+            //no argument. 
+            folderPath = input("Enter the target folder path.\n");
+            extensions = input("Enter the file extensions you'd like to read, seperated by forwardslashes (/) if there are multiple.\n");
+        }
+        if(argc == 3){
+            //arguments present
+            folderPath = argv[1];
+            extensions = argv[2];
+        }
         if(strcmp(folderPath, "this") == 0){
             //get current directory as a string
             char dir[MAXWORDS]; 
             getcwd(folderPath, sizeof(dir));
         }
+        char* token = strtok(extensions, "/");
+        while(token != NULL){
+            append(allowedExtensions, token, false);
+            token = strtok(NULL, "/");
+        }
+        DIR* directory = opendir(folderPath);
+        if (directory == NULL) {
+            printf("Invalid directory specified.\n");
+            continue;
+        }
+        //start walking...
+        numberOfLines = 0;
+        numberOfEmptyLines = 0;
+        numberOfFiles = 0;
+        walk(folderPath);
+        printf("\nFiles scanned: %d\n", numberOfFiles);
+        printf("Total number of lines: %d\n", numberOfLines);
+        printf("Total number of blank lines: %d\n", numberOfEmptyLines);
+        printf("Total number of lines, excluding blank lines: %d\n\n", numberOfLines-numberOfEmptyLines);
+        if(argc == 3){
+            break;
+        }
     }
-    char* token = strtok(extensions, "-");
-    while(token != NULL){
-        append(allowedExtensions, token, false);
-        token = strtok(NULL, "-");
-    }
-    DIR* directory = opendir(folderPath);
-    if (directory == NULL) {
-        printf("Invalid directory.\n");
-        return 0;
-    }
-    //start walking...
-    numberOfLines = 0;
-    numberOfEmptyLines = 0;
-    numberOfFiles = 0;
-    walk(folderPath);
-    printf("Files scanned: %d\n", numberOfFiles);
-    printf("Total number of lines: %d\n", numberOfLines);
-    printf("Total number of blank lines: %d\n", numberOfEmptyLines);
-    printf("Total number of lines, excluding blank lines: %d\n", numberOfLines-numberOfEmptyLines);
+    return 0;
 }
