@@ -55,7 +55,7 @@ int numberOfLines;
 int numberOfFiles;
 int numberOfEmptyLines;
 
-//get input from user
+//get input from user, given the message
 char* input(char* message){
     char* input = NULL;
     size_t buffer_size = 0;
@@ -102,6 +102,7 @@ bool isWhiteSpace(char* string){
     return true;
 }
 
+//prints out and counts the lines of a file, given its path.
 int findLines(char* filePath) {
     printf("OPENING FILE: %s\n", filePath);
     char path[MAXWORDS];
@@ -132,6 +133,7 @@ int findLines(char* filePath) {
     return numLines;
 }
 
+//walk folderpath 
 int walk(char* folderPath){
     DIR* directory;
     struct dirent *entry;
