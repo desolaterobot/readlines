@@ -197,6 +197,7 @@ int main(int argc, char *argv[]){
             append(allowedExtensions, token, false);
             token = strtok(NULL, "/");
         }
+        size_t len = strlen(folderPath);
         DIR* directory = opendir(folderPath);
         if (directory == NULL) {
             printf("Invalid directory specified.\n");
