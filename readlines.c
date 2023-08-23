@@ -161,7 +161,7 @@ int walk(char* folderPath){
     }
 }
 
-//format:
+//one-line format:
 //[readlines], [this/PATH], [extension]
 int main(int argc, char *argv[]){
     while(1){
